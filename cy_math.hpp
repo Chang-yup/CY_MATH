@@ -1,13 +1,11 @@
 #include <iostream>
-#include "error_check.h"
+#include "cy_interface.h"
 
 // linear regression
 template<typename T, typename U>
-void linearRegression(T& resultA, T& resultB, const U& x, const U& y) {
+void linearRegression(T& resultA, T& resultB, const Container<T, U>& x, const Container<T, U>& y) {
 	// COMPILE TIME ERROR CHECK
 	CHECK_DT_FRACTION(T);
-	CHECK_MT_SIZE(U);
-	CHECK_MT_AT(U);
 
 	// RUN TIME ERROR CHECK
 	if (x.size() != y.size()) std::cerr << "[ERROR] The size of containers are not equal." << std::endl;
@@ -19,8 +17,8 @@ void linearRegression(T& resultA, T& resultB, const U& x, const U& y) {
 	T sumX = 0, sumY = 0;
 	T avgX = 0, avgY = 0;
 	for (size_t i = 0; i < n; i++) {
-		T curX = x.at(i);
-		T curY = y.at(i);
+		T curX = x[i];
+		T curY = y[i];
 
 		sumX += curX;
 		sumY += curY;
@@ -32,8 +30,8 @@ void linearRegression(T& resultA, T& resultB, const U& x, const U& y) {
 
 	T temp1 = 0, temp2 = 0;
 	for (size_t i = 0; i < n; i++) {
-		T curX = x.at(i);
-		T curY = y.at(i);
+		T curX = x[i];
+		T curY = y[i];
 		T devX = (curX - avgX);
 		T devY = (curY - avgY);
 
