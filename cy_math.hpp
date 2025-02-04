@@ -1,9 +1,10 @@
 #include <iostream>
-#include "cy_interface.h"
+#include "error_check.h"
+#include "class\cy_interface.h"
 
 // linear regression
 template<typename T, typename U>
-void linearRegression(T& resultA, T& resultB, const Container<T, U>& x, const Container<T, U>& y) {
+void linearRegression(T& resultA, T& resultB, Container<T, U>& x, Container<T, U>& y) {
 	// COMPILE TIME ERROR CHECK
 	CHECK_DT_FRACTION(T);
 

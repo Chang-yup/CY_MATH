@@ -1,9 +1,6 @@
 #pragma once
 
 #include <iterator>
-
-#pragma once
-
 #include <vector>
 #include <cstddef>
 
@@ -39,7 +36,8 @@ public:
     virtual iterator erase(iterator first, iterator last) = 0;
     virtual void swap(containerT& x) = 0;
     virtual void clear() = 0;
-    virtual T& operator[](size_t pos);
+    virtual T* data() = 0;
+    virtual T& operator[](size_t pos) = 0;
 };
 
 template<typename T>
@@ -52,6 +50,7 @@ public:
     using reverse_iterator = typename std::vector<T>::reverse_iterator;
     using const_reverse_iterator = typename std::vector<T>::const_reverse_iterator;
 
+    VecWrap() {}
     VecWrap(std::vector<T> data) : mData(data) {}
     ~VecWrap() {}
 
@@ -77,6 +76,7 @@ public:
     iterator erase(iterator first, iterator last) override { return mData.erase(first, last); }
     void swap(std::vector<T>& x) override { mData.swap(x); }
     void clear() override { mData.clear(); }
+    T* data() { return &mData[0]; }
 
-    T& operator[](size_t pos) { return mData[pos]; }
+    T& operator[](size_t pos) override { return mData[pos]; }
 };
