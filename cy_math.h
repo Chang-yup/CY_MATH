@@ -3,10 +3,8 @@
 #include <ctime>
 #include <random>
 
-#include "class\cy_interface.h"
-
 template<typename T, typename U>
-void linearRegression(T& resultA, T& resultB, const Container<T, U>& x, const Container<T, U>& y);
+void linearRegression(T& resultA, T& resultB, U& xList, U& yList);
 
 template<typename T>
 class RandomGenerator {

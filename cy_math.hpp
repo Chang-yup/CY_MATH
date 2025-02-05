@@ -1,29 +1,29 @@
 #include <iostream>
 #include "error_check.h"
-#include "class\cy_interface.h"
 
 // linear regression
 template<typename T, typename U>
-void linearRegression(T& resultA, T& resultB, Container<T, U>& x, Container<T, U>& y) {
+void linearRegression(T& resultA, T& resultB, U& xList, U& yList) {
 	// COMPILE TIME ERROR CHECK
 	CHECK_DT_FRACTION(T);
+	CHECK_MT_SIZE(U);
+	CHECK_OP_SUBSCRIPT(U);
 
 	// RUN TIME ERROR CHECK
-	if (x.size() != y.size()) std::cerr << "[ERROR] The size of containers are not equal." << std::endl;
-	if (x.size() < 2) std::cerr << "[ERROR] The size must be larger than one" << std::endl;
+	if (xList.size() != yList.size()) std::cerr << "[ERROR] The size of containers are not equal." << std::endl;
+	if (xList.size() < 2) std::cerr << "[ERROR] The size must be larger than one" << std::endl;
 
 	// LINEAR REGRESSION
-	size_t n = x.size();
+	size_t n = xList.size();
 
 	T sumX = 0, sumY = 0;
 	T avgX = 0, avgY = 0;
 	for (size_t i = 0; i < n; i++) {
-		T curX = x[i];
-		T curY = y[i];
+		T curX = xList[i];
+		T curY = yList[i];
 
 		sumX += curX;
 		sumY += curY;
-
 	}
 
 	avgX = sumX / n;
@@ -31,8 +31,8 @@ void linearRegression(T& resultA, T& resultB, Container<T, U>& x, Container<T, U
 
 	T temp1 = 0, temp2 = 0;
 	for (size_t i = 0; i < n; i++) {
-		T curX = x[i];
-		T curY = y[i];
+		T curX = xList[i];
+		T curY = yList[i];
 		T devX = (curX - avgX);
 		T devY = (curY - avgY);
 
