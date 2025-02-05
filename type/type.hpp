@@ -5,26 +5,14 @@
 
 namespace cy {
 	//// Ω∫ƒÆ∂Û ø¨ªÍ
-	//∫§≈Õ µ°º¿
-	template<typename T>
-	Vector<T> operator+(const Vector<T>& a, const Vector<T>& b) {
-		if(a.dimension != b.dimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
-		
-		Vector<T> temp;
-
-		for (size_t i = 0; i < a.dimension; i++) {
-			temp.mData.push_back(a.mData[i] + b.mData[i]);
-		}
-
-		return temp;
-	}
+	//µ°º¿
 	template<typename T>
 	Vector<T> operator+(const Vector<T>& vec, const T& scalar) {
 
-		Vector<T> temp;
+		Vector<T> temp(vec.mDimension, 0);
 
-		for (size_t i = 0; i < vec.dimension; i++) {
-			temp.mData.push_back(vec.mData[i] + scalar);
+		for (size_t i = 0; i < vec.mDimension; i++) {
+			temp.mData[i] = vec.mData[i] + scalar;
 		}
 
 		return temp;
@@ -32,14 +20,14 @@ namespace cy {
 	template<typename T>
 	Vector<T> operator+(const T& scalar, const Vector<T>& vec) { return vec+scalar; }
 
-	//∫§≈Õ ª¨º¿
+	//ª¨º¿
 	template<typename T>
 	Vector<T> operator-(const Vector<T>& vec, const T& scalar) {
 
-		Vector<T> temp;
+		Vector<T> temp(vec.mDimension, 0);
 
-		for (size_t i = 0; i < vec.dimension; i++) {
-			temp.mData.push_back(vec.mData[i] - scalar);
+		for (size_t i = 0; i < vec.mDimension; i++) {
+			temp.mData[i] = vec.mData[i] - scalar;
 		}
 
 		return temp;
@@ -48,23 +36,23 @@ namespace cy {
 	template<typename T>
 	Vector<T> operator-(const T& scalar, const Vector<T>& vec) {
 
-		Vector<T> temp;
+		Vector<T> temp(vec.mDimension, 0);
 
-		for (size_t i = 0; i < vec.dimension; i++) {
-			temp.mData.push_back(scalar - vec.mData[i]);
+		for (size_t i = 0; i < vec.mDimension; i++) {
+			temp.mData[i] = scalar - vec.mData[i];
 		}
 
 		return temp;
 	}
 
-	//∫§≈Õ ∞ˆº¿(Ω∫ƒÆ∂Û∞ˆ)
+	//∞ˆº¿(Ω∫ƒÆ∂Û∞ˆ)
 	template<typename T>
 	Vector<T> operator*(const Vector<T>& vec, const T& scalar) {
 
-		Vector<T> temp;
+		Vector<T> temp(vec.mDimension, 0);
 
-		for (size_t i = 0; i < vec.dimension; i++) {
-			temp.mData.push_back(vec.mData[i] * scalar);
+		for (size_t i = 0; i < vec.mDimension; i++) {
+			temp.mData[i] = vec.mData[i] * scalar;
 		}
 
 		return temp;
@@ -72,7 +60,8 @@ namespace cy {
 	template<typename T>
 	Vector<T> operator*(const T& scalar, const Vector<T>& vec) { return vec*scalar; }
 
-	//// ∫Ò±≥ø¨ªÍ
+	//// ∫§≈Õø¨ªÍ
+	//¥Î¿‘ø¨ªÍ
 	template<typename T>
 	Vector<T>& Vector<T>::operator+=(const T& scalar) {
 		for (size_t i = 0; i < (*this).mDimension; i++) {
@@ -90,7 +79,7 @@ namespace cy {
 
 		return (*this);
 	}
-
+	//∫Ò±≥ø¨ªÍ
 	template<typename T>
 	Vector<T>& Vector<T>::operator*=(const T& scalar) {
 		for (size_t i = 0; i < (*this).mDimension; i++) {
@@ -100,22 +89,9 @@ namespace cy {
 		return (*this);
 	}
 
-	//// ∫§≈Õø¨ªÍ
-	template<typename T>
-	T dot(const Vector<T>& a, const Vector<T>& b) {
-		if (a.dimension != b.dimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
-
-		T temp = 0;
-		for (size_t i = 0; i < a.dimension; i++) {
-			temp += a[i] * b[i];
-		}
-
-		return temp;
-	}
-
 	template<typename T>
 	bool Vector<T>::operator==(const Vector<T>& other) {
-		if ((*this).dimension != other.dimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+		if ((*this).mDimension != other.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
 
 		for (size_t i = 0; i < (*this).mDimension; i++) {
 			if ((*this).mData[i] != other.mData[i]) return false;
@@ -125,7 +101,7 @@ namespace cy {
 
 	template<typename T>
 	bool Vector<T>::operator!=(const Vector<T>& other) {
-		if ((*this).dimension != other.dimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+		if ((*this).mDimension != other.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
 
 		for (size_t i = 0; i < (*this).mDimension; i++) {
 			if ((*this).mData[i] != other.mData[i]) return true;
@@ -153,11 +129,51 @@ namespace cy {
 		return (*this).norm() <= other.norm();
 	}
 
+	//µ°º¿
+	template<typename T>
+	Vector<T> Vector<T>::operator+(const Vector<T>& other) {
+		if ((*this).mDimension != other.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+
+		Vector<T> temp((*this).mDimension, 0);
+
+		for (size_t i = 0; i < (*this).mDimension; i++) {
+			temp.mData[i] = (*this).mData[i] + other.mData[i];
+		}
+
+		return temp;
+	}
+	//ª¨º¿
+	template<typename T>
+	Vector<T> Vector<T>::operator-(const Vector<T>& other) {
+		if ((*this).mDimension != other.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+
+		Vector<T> temp((*this).mDimension, 0);
+
+		for (size_t i = 0; i < (*this).mDimension; i++) {
+			temp.mData[i] = (*this).mData[i] - other.mData[i];
+		}
+
+		return temp;
+	}
+
+	//≥ª¿˚
+	template<typename T>
+	T dot(const Vector<T>& a, const Vector<T>& b) {
+		if (a.mDimension != b.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+
+		T temp = 0;
+		for (size_t i = 0; i < a.mDimension; i++) {
+			temp += a[i] * b[i];
+		}
+
+		return temp;
+	}
+
 	////±‚≈∏ø¨ªÍ
 	template<typename T>
 	T Vector<T>::norm() {
 		T temp = 0;
-		for (size_t i = 0; i < (*this).dimension; i++) {
+		for (size_t i = 0; i < (*this).mDimension; i++) {
 			temp += (*this).mData[i] * (*this).mData[i];
 		}
 		
@@ -166,15 +182,36 @@ namespace cy {
 
 	template<typename T>
 	T getDist(const Vector<T>& a, const Vector<T>& b) {
-		if (a.dimension != b.dimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
+		if (a.mDimension != b.mDimension) std::cerr << "[ERROR] The dimension of vectors are not equal." << std::endl;
 
 		T temp1 = 0;
-		for (size_t i = 0; i < a.dimension; i++) {
+		for (size_t i = 0; i < a.mDimension; i++) {
 			T temp2 = a.mData[i] - b.mData[i];
 			temp1 += temp2 * temp2;
 		}
 
 		return static_cast<T>sqrt(static_cast<double>temp1);
+	}
+
+	template<typename T>
+	void Vector<T>::set(size_t target_index, T data) {
+		if (n >= mDimension) std::cerr << "The target index must be less than dimension!" << std::endl;
+
+		mData[target_index] = data;
+	}
+	template<typename T>
+	T Vector<T>::get(size_t target_index) {
+		if (n >= mDimension) std::cerr << "The target index must be less than dimension!" << std::endl;
+
+		return mData[target_index];
+	}
+
+	template<typename T>
+	void Vector<T>::print() {
+		for (size_t i = 0; i < (*this).mDimension; i++) {
+			std::cout << (*this).mData[i] << " ";
+		}
+		std::cout << std::endl;
 	}
 
 }
